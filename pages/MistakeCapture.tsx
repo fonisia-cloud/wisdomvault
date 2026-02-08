@@ -2,7 +2,6 @@ import React, { useMemo, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { IMAGES } from '../constants';
 import { ocrService } from '@/services/ocr';
-import MathMarkdown from '@/components/MathMarkdown';
 
 type CropBox = {
   x: number;
@@ -14,9 +13,10 @@ type CropBox = {
 type DragMode = 'move' | 'resize-nw' | 'resize-ne' | 'resize-sw' | 'resize-se';
 
 const DEFAULT_CROP: CropBox = { x: 0.1, y: 0.15, w: 0.8, h: 0.7 };
-const MAX_EDITOR_EDGE = 2200;
-const MAX_OCR_EDGE = 1400;
-const MAX_OCR_PIXELS = 1_500_000;
+const IS_IOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+const MAX_EDITOR_EDGE = IS_IOS ? 1600 : 2200;
+const MAX_OCR_EDGE = IS_IOS ? 1024 : 1400;
+const MAX_OCR_PIXELS = IS_IOS ? 900_000 : 1_500_000;
 
 const MistakeCapture: React.FC = () => {
   const navigate = useNavigate();
@@ -91,6 +91,7 @@ const MistakeCapture: React.FC = () => {
       setImageDataUrl(optimizedDataUrl);
       setCrop(DEFAULT_CROP);
       setRecognizeAttempts(0);
+      setRecognizedQuestion('');
     } catch {
       setErrorText('读取图片失败，请重试。');
     }
@@ -252,9 +253,8 @@ const MistakeCapture: React.FC = () => {
   };
 
   const runSmartRecognition = async () => {
-    const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
-    const candidates: CropBox[] = isIOS
-      ? [crop, expandCrop(crop, 1.25), { x: 0, y: 0, w: 1, h: 1 }]
+    const candidates: CropBox[] = IS_IOS
+      ? [crop, expandCrop(crop, 1.18)]
       : [crop, expandCrop(crop, 1.2), expandCrop(crop, 1.4), { x: 0, y: 0, w: 1, h: 1 }];
 
     let bestText = '';
@@ -262,14 +262,14 @@ const MistakeCapture: React.FC = () => {
     for (const box of candidates) {
       const dataUrl = await createCroppedDataUrlByBox(box);
       const text = await ocrService.recognizeQuestion(dataUrl);
-      await new Promise((resolve) => setTimeout(resolve, 16));
+      await new Promise((resolve) => setTimeout(resolve, 50));
       if (looksValidOcrText(text)) {
-        return text;
+        return text.slice(0, 5000);
       }
       if (text.length > bestText.length) bestText = text;
     }
 
-    return bestText;
+    return bestText.slice(0, 5000);
   };
 
   const handleRecognize = async () => {
@@ -464,7 +464,9 @@ const MistakeCapture: React.FC = () => {
             {recognizedQuestion && (
               <div className="bg-surface-light dark:bg-surface-dark border border-black/5 dark:border-white/10 rounded-xl p-3 text-sm max-h-36 overflow-auto">
                 <p className="font-bold mb-1">OCR 识别结果</p>
-                <MathMarkdown content={recognizedQuestion} className="text-text-sec-light dark:text-text-sec-dark" />
+                <pre className="text-text-sec-light dark:text-text-sec-dark whitespace-pre-wrap break-words font-sans text-sm m-0">
+                  {recognizedQuestion}
+                </pre>
               </div>
             )}
 
