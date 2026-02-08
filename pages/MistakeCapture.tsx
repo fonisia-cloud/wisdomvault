@@ -14,6 +14,9 @@ type CropBox = {
 type DragMode = 'move' | 'resize-nw' | 'resize-ne' | 'resize-sw' | 'resize-se';
 
 const DEFAULT_CROP: CropBox = { x: 0.1, y: 0.15, w: 0.8, h: 0.7 };
+const MAX_EDITOR_EDGE = 2200;
+const MAX_OCR_EDGE = 1400;
+const MAX_OCR_PIXELS = 1_500_000;
 
 const MistakeCapture: React.FC = () => {
   const navigate = useNavigate();
@@ -50,15 +53,44 @@ const MistakeCapture: React.FC = () => {
       reader.readAsDataURL(file);
     });
 
+  const loadImage = (src: string) =>
+    new Promise<HTMLImageElement>((resolve, reject) => {
+      const img = new Image();
+      img.onload = () => resolve(img);
+      img.onerror = reject;
+      img.src = src;
+    });
+
+  const resizeDataUrl = async (dataUrl: string, maxEdge: number, quality = 0.9) => {
+    const img = await loadImage(dataUrl);
+    const sourceW = img.naturalWidth || img.width;
+    const sourceH = img.naturalHeight || img.height;
+    const edgeScale = Math.min(1, maxEdge / Math.max(sourceW, sourceH));
+    if (edgeScale >= 0.999) return dataUrl;
+
+    const targetW = Math.max(2, Math.round(sourceW * edgeScale));
+    const targetH = Math.max(2, Math.round(sourceH * edgeScale));
+    const canvas = document.createElement('canvas');
+    canvas.width = targetW;
+    canvas.height = targetH;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return dataUrl;
+
+    ctx.drawImage(img, 0, 0, sourceW, sourceH, 0, 0, targetW, targetH);
+    return canvas.toDataURL('image/jpeg', quality);
+  };
+
   const handleChooseFile = async (file: File | undefined) => {
     if (!file) return;
     setErrorText('');
     setRecognizedQuestion('');
 
     try {
-      const dataUrl = await readFileAsDataUrl(file);
-      setImageDataUrl(dataUrl);
+      const rawDataUrl = await readFileAsDataUrl(file);
+      const optimizedDataUrl = await resizeDataUrl(rawDataUrl, MAX_EDITOR_EDGE, 0.88);
+      setImageDataUrl(optimizedDataUrl);
       setCrop(DEFAULT_CROP);
+      setRecognizeAttempts(0);
     } catch {
       setErrorText('读取图片失败，请重试。');
     }
@@ -162,14 +194,17 @@ const MistakeCapture: React.FC = () => {
     const sw = Math.floor(crop.w * image.naturalWidth);
     const sh = Math.floor(crop.h * image.naturalHeight);
 
-    canvas.width = sw;
-    canvas.height = sh;
+    const edgeScale = Math.min(1, 1800 / Math.max(sw, sh));
+    const targetW = Math.max(2, Math.round(sw * edgeScale));
+    const targetH = Math.max(2, Math.round(sh * edgeScale));
+    canvas.width = targetW;
+    canvas.height = targetH;
 
     const ctx = canvas.getContext('2d');
     if (!ctx) throw new Error('Canvas not available');
 
-    ctx.drawImage(image, sx, sy, sw, sh, 0, 0, sw, sh);
-    return canvas.toDataURL('image/jpeg', 0.92);
+    ctx.drawImage(image, sx, sy, sw, sh, 0, 0, targetW, targetH);
+    return canvas.toDataURL('image/jpeg', 0.86);
   };
 
   const createCroppedDataUrlByBox = async (box: CropBox) => {
@@ -182,14 +217,20 @@ const MistakeCapture: React.FC = () => {
     const sw = Math.floor(box.w * image.naturalWidth);
     const sh = Math.floor(box.h * image.naturalHeight);
 
-    canvas.width = Math.max(2, sw);
-    canvas.height = Math.max(2, sh);
+    const edgeScale = Math.min(1, MAX_OCR_EDGE / Math.max(sw, sh));
+    const pixelScale = Math.min(1, Math.sqrt(MAX_OCR_PIXELS / Math.max(1, sw * sh)));
+    const scale = Math.min(edgeScale, pixelScale);
+    const targetW = Math.max(2, Math.round(sw * scale));
+    const targetH = Math.max(2, Math.round(sh * scale));
+
+    canvas.width = targetW;
+    canvas.height = targetH;
 
     const ctx = canvas.getContext('2d');
     if (!ctx) throw new Error('Canvas not available');
 
-    ctx.drawImage(image, sx, sy, sw, sh, 0, 0, sw, sh);
-    return canvas.toDataURL('image/jpeg', 0.92);
+    ctx.drawImage(image, sx, sy, sw, sh, 0, 0, targetW, targetH);
+    return canvas.toDataURL('image/jpeg', 0.84);
   };
 
   const expandCrop = (base: CropBox, ratio: number): CropBox => {
@@ -211,13 +252,17 @@ const MistakeCapture: React.FC = () => {
   };
 
   const runSmartRecognition = async () => {
-    const candidates: CropBox[] = [crop, expandCrop(crop, 1.2), expandCrop(crop, 1.4), { x: 0, y: 0, w: 1, h: 1 }];
+    const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+    const candidates: CropBox[] = isIOS
+      ? [crop, expandCrop(crop, 1.25), { x: 0, y: 0, w: 1, h: 1 }]
+      : [crop, expandCrop(crop, 1.2), expandCrop(crop, 1.4), { x: 0, y: 0, w: 1, h: 1 }];
 
     let bestText = '';
 
     for (const box of candidates) {
       const dataUrl = await createCroppedDataUrlByBox(box);
       const text = await ocrService.recognizeQuestion(dataUrl);
+      await new Promise((resolve) => setTimeout(resolve, 16));
       if (looksValidOcrText(text)) {
         return text;
       }
