@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="zh-CN" class="light">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <title>WisdomVault</title>
+
+    <meta name="theme-color" content="#f4c025" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="apple-mobile-web-app-title" content="WisdomVault" />
+    <meta name="mobile-web-app-capable" content="yes" />
+
+    <link rel="manifest" href="/manifest.webmanifest" />
+    <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png" />
+
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com" rel="preconnect" />
+    <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect" />
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@100..900&family=Plus+Jakarta+Sans:wght@400;500;700;800&display=swap" rel="stylesheet" />
+
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <script>
+      tailwind.config = {
+        darkMode: 'class',
+        theme: {
+          extend: {
+            colors: {
+              primary: '#f4c025',
+              'primary-dark': '#dca508',
+              'background-light': '#f8f8f5',
+              'background-dark': '#221e10',
+              'surface-light': '#ffffff',
+              'surface-dark': '#2a261a',
+              'text-main-light': '#181611',
+              'text-main-dark': '#ffffff',
+              'text-sec-light': '#8a8060',
+              'text-sec-dark': '#b0a890'
+            },
+            fontFamily: {
+              display: ['Noto Sans SC', 'Plus Jakarta Sans', 'sans-serif'],
+              sans: ['Noto Sans SC', 'sans-serif']
+            },
+            borderRadius: {
+              DEFAULT: '0.5rem',
+              lg: '1rem',
+              xl: '1.5rem',
+              '2xl': '2rem',
+              full: '9999px'
+            },
+            boxShadow: {
+              '3d': '0 4px 0 0 rgba(0,0,0,0.1)',
+              '3d-primary': '0 4px 0 0 #dca508'
+            },
+            animation: {
+              float: 'float 3s ease-in-out infinite',
+              shimmer: 'shimmer 2s infinite',
+              scan: 'scan 3s ease-in-out infinite'
+            },
+            keyframes: {
+              float: {
+                '0%, 100%': { transform: 'translateY(0)' },
+                '50%': { transform: 'translateY(-10px)' }
+              },
+              shimmer: {
+                '0%': { transform: 'translateX(-100%)' },
+                '100%': { transform: 'translateX(100%)' }
+              },
+              scan: {
+                '0%': { top: '0%', opacity: '0' },
+                '10%': { opacity: '1' },
+                '90%': { opacity: '1' },
+                '100%': { top: '100%', opacity: '0' }
+              }
+            }
+          }
+        }
+      };
+    </script>
+
+    <style>
+      body {
+        min-height: 100dvh;
+        background-color: #111;
+      }
+      .material-symbols-outlined {
+        font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+      }
+      .material-symbols-outlined.unfilled {
+        font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+      }
+      .no-scrollbar::-webkit-scrollbar {
+        display: none;
+      }
+      .no-scrollbar {
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/index.tsx"></script>
+  </body>
+</html>

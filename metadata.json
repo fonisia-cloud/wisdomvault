@@ -1,0 +1,7 @@
+{
+  "name": "WisdomVault",
+  "description": "A gamified learning application to capture mistakes, review them with Ebbinghaus memory curves, and learn with an AI Socratic tutor.",
+  "requestFramePermissions": [
+    "camera"
+  ]
+}
