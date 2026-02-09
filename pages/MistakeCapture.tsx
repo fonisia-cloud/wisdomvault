@@ -13,7 +13,9 @@ type CropBox = {
 type DragMode = 'move' | 'resize-nw' | 'resize-ne' | 'resize-sw' | 'resize-se';
 
 const DEFAULT_CROP: CropBox = { x: 0.1, y: 0.15, w: 0.8, h: 0.7 };
-const IS_IOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+const IS_IOS =
+  /iPad|iPhone|iPod/.test(navigator.userAgent) ||
+  (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
 const MAX_EDITOR_EDGE = IS_IOS ? 1600 : 2200;
 const MAX_OCR_EDGE = IS_IOS ? 1024 : 1400;
 const MAX_OCR_PIXELS = IS_IOS ? 900_000 : 1_500_000;
@@ -254,7 +256,7 @@ const MistakeCapture: React.FC = () => {
 
   const runSmartRecognition = async () => {
     const candidates: CropBox[] = IS_IOS
-      ? [crop, expandCrop(crop, 1.18)]
+      ? [crop]
       : [crop, expandCrop(crop, 1.2), expandCrop(crop, 1.4), { x: 0, y: 0, w: 1, h: 1 }];
 
     let bestText = '';
