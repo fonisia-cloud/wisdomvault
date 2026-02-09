@@ -31,13 +31,7 @@ const AITutor: React.FC = () => {
 
     const loadHistory = async () => {
       if (!mistakeId) {
-        setMessages([
-          {
-            sender: 'ai',
-            text: '我看到你在分母部分的答案了，如果我们将分母改变会发生什么？',
-            avatar: IMAGES.robotTutorSmall
-          }
-        ]);
+        setMessages([]);
         return;
       }
 
@@ -47,16 +41,10 @@ const AITutor: React.FC = () => {
 
         if (!rows.length) {
           const firstPrompt = routeState.draftAnswer?.trim();
-          setMessages([
-            {
-              sender: 'ai',
-              text: currentMistake
-                ? '我仔细看了一下你的笔记，这里似乎有个常见误区。你可以先描述一下你的思路吗？'
-                : '我们先从题意开始，你觉得这道题最关键的已知条件是什么？',
-              avatar: IMAGES.robotTutorSmall
-            },
-            ...(firstPrompt ? [{ sender: 'user' as const, text: firstPrompt }] : [])
-          ]);
+          setMessages(firstPrompt ? [{ sender: 'user' as const, text: firstPrompt }] : []);
+          if (firstPrompt) {
+            setInputText(firstPrompt);
+          }
           return;
         }
 

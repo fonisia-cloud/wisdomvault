@@ -386,9 +386,6 @@ const MistakeVault: React.FC = () => {
                 </div>
             </main>
 
-             <button className="fixed bottom-24 right-6 size-14 rounded-full bg-gradient-to-br from-primary to-yellow-500 shadow-lg shadow-primary/30 flex items-center justify-center text-[#221e10] z-30 transition-transform hover:scale-105 active:scale-95">
-                <span className="material-symbols-outlined text-3xl">lightbulb</span>
-            </button>
         </div>
     );
 };

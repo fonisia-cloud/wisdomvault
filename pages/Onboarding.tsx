@@ -50,7 +50,7 @@ const Onboarding: React.FC = () => {
             return;
         }
 
-        navigate('/home');
+        setShowRegister(false);
     };
 
     const handleLoginSubmit = async (e: React.FormEvent) => {
@@ -68,7 +68,7 @@ const Onboarding: React.FC = () => {
             return;
         }
 
-        navigate('/home');
+        setShowLogin(false);
     };
 
     return (
@@ -304,7 +304,7 @@ const FeatureCard: React.FC<{ icon: string, color: string, title: string, desc: 
             </div>
             <h3 className="font-bold text-lg mb-2 text-text-main-light dark:text-text-main-dark">{title}</h3>
             <p className="text-sm text-text-sec-light dark:text-text-sec-dark leading-relaxed whitespace-pre-line">
-                {desc}
+                {desc.replace(/\\n/g, '\n')}
             </p>
         </div>
     );

@@ -35,17 +35,6 @@ const AppContent: React.FC = () => {
         'large': 'text-lg'
     }[appSettings.fontSize] || 'text-base';
 
-    if (!isReady) {
-        return (
-            <div className="w-full min-h-[100svh] bg-background-light dark:bg-background-dark flex items-center justify-center">
-                <div className="flex items-center gap-3 text-text-sec-light dark:text-text-sec-dark">
-                    <span className="material-symbols-outlined animate-spin">progress_activity</span>
-                    <span className="font-semibold">正在加载数据...</span>
-                </div>
-            </div>
-        );
-    }
-
     return (
         // 1. 软件需要自适应iPhone和ipad 的分辨率
         <div className={`w-full min-h-[100svh] bg-background-light dark:bg-background-dark relative overflow-x-hidden flex flex-col items-center ${fontClass}`}>

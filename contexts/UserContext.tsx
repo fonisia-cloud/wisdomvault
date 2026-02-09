@@ -216,10 +216,21 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
       try {
         const session = await authService.getSession();
         if (!mounted) return;
+
+        if (session?.user) {
+          setUser((prev) => ({
+            ...prev,
+            id: session.user.id,
+            isAuthenticated: true,
+            email: session.user.email ?? '',
+            name: (session.user.user_metadata?.display_name as string) || prev.name
+          }));
+        }
+
+        setIsReady(true);
         await hydrateBySession(session);
       } catch (error) {
         console.error('Bootstrap user session failed', error);
-      } finally {
         if (mounted) setIsReady(true);
       }
     };
@@ -228,6 +239,15 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
     const unsubscribe = authService.onAuthStateChange(async (session) => {
       try {
+        if (session?.user) {
+          setUser((prev) => ({
+            ...prev,
+            id: session.user.id,
+            isAuthenticated: true,
+            email: session.user.email ?? '',
+            name: (session.user.user_metadata?.display_name as string) || prev.name
+          }));
+        }
         await hydrateBySession(session);
       } catch (error) {
         console.error('Auth state hydrate failed', error);
