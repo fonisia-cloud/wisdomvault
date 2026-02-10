@@ -98,11 +98,11 @@ const Home: React.FC = () => {
                 {/* Map Area */}
                 <div className="relative flex-1 flex flex-col items-center px-4 py-6 md:p-0">
                     {/* Decorative Background */}
-                    <div className="absolute inset-0 z-0 pointer-events-none opacity-5 dark:opacity-10 overflow-hidden md:rounded-3xl md:bg-gray-100 md:dark:bg-white/5">
-                        <div className="absolute top-20 left-10 text-9xl">☁️</div>
-                        <div className="absolute top-60 right-5 text-8xl">🌲</div>
-                        <div className="absolute bottom-40 left-10 text-8xl">🍄</div>
-                        <div className="absolute bottom-10 right-20 text-9xl">🏰</div>
+                    <div className="absolute inset-0 z-0 pointer-events-none opacity-20 dark:opacity-10 overflow-hidden md:rounded-3xl md:bg-gray-100 md:dark:bg-white/5">
+                        <div className="absolute top-14 left-8 w-20 h-20 rounded-full bg-primary/30 blur-2xl"></div>
+                        <div className="absolute top-48 right-6 w-24 h-24 rounded-full bg-blue-300/40 blur-2xl"></div>
+                        <div className="absolute bottom-36 left-8 w-16 h-16 rounded-full bg-green-300/40 blur-2xl"></div>
+                        <div className="absolute bottom-8 right-16 w-28 h-28 rounded-full bg-orange-300/30 blur-2xl"></div>
                     </div>
 
                     <h3 className="z-10 text-text-sec-light dark:text-text-sec-dark font-bold text-sm tracking-widest uppercase mb-5 md:mt-6">冒险地图</h3>

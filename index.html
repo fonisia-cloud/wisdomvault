@@ -14,7 +14,7 @@
     <link rel="manifest" href="/manifest.webmanifest" />
     <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png" />
 
-    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=block" rel="stylesheet" />
     <link href="https://fonts.googleapis.com" rel="preconnect" />
     <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect" />
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@100..900&family=Plus+Jakarta+Sans:wght@400;500;700;800&display=swap" rel="stylesheet" />
@@ -38,8 +38,8 @@
               'text-sec-dark': '#b0a890'
             },
             fontFamily: {
-              display: ['Noto Sans SC', 'Plus Jakarta Sans', 'sans-serif'],
-              sans: ['Noto Sans SC', 'sans-serif']
+              display: ['Noto Sans SC', 'Plus Jakarta Sans', 'Apple Color Emoji', 'Segoe UI Emoji', 'Noto Color Emoji', 'sans-serif'],
+              sans: ['Noto Sans SC', 'Apple Color Emoji', 'Segoe UI Emoji', 'Noto Color Emoji', 'sans-serif']
             },
             borderRadius: {
               DEFAULT: '0.5rem',
@@ -84,6 +84,19 @@
         background-color: #f8f8f5;
       }
       .material-symbols-outlined {
+        font-family: 'Material Symbols Outlined';
+        font-style: normal;
+        font-weight: normal;
+        font-size: 24px;
+        line-height: 1;
+        letter-spacing: normal;
+        text-transform: none;
+        display: inline-block;
+        white-space: nowrap;
+        word-wrap: normal;
+        direction: ltr;
+        -webkit-font-feature-settings: 'liga';
+        -webkit-font-smoothing: antialiased;
         font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24;
       }
       .material-symbols-outlined.unfilled {

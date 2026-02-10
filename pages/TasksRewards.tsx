@@ -8,6 +8,7 @@ const TasksRewards: React.FC = () => {
     const navigate = useNavigate();
     const { user, refreshData, mistakes, rewards, addReward, deleteReward, purchaseReward } = useUser();
     const [taskClaims, setTaskClaims] = useState<Record<string, string>>({});
+    const [taskClaimsReady, setTaskClaimsReady] = useState(false);
     const [taskHint, setTaskHint] = useState('');
     
     // Add Reward Modal State
@@ -19,19 +20,47 @@ const TasksRewards: React.FC = () => {
     const [isSubmittingReward, setIsSubmittingReward] = useState(false);
 
     useEffect(() => {
-        if (!user.id) return;
+        if (!user.id) {
+            setTaskClaims({});
+            setTaskClaimsReady(true);
+            return;
+        }
+
+        let canceled = false;
+        const cached = taskClaimsService.getCachedClaims(user.id);
+        if (cached && cached.length > 0) {
+            const cachedMap: Record<string, string> = {};
+            cached.forEach((row) => {
+                cachedMap[row.task_id] = row.claimed_at;
+            });
+            setTaskClaims(cachedMap);
+            setTaskClaimsReady(true);
+        } else {
+            setTaskClaimsReady(false);
+        }
 
         taskClaimsService.listClaims(user.id)
             .then((rows) => {
+                if (canceled) return;
                 const map: Record<string, string> = {};
                 rows.forEach((row) => {
                     map[row.task_id] = row.claimed_at;
                 });
                 setTaskClaims(map);
+                setTaskClaimsReady(true);
             })
             .catch((error) => {
+                if (canceled) return;
                 console.error('Load task claims failed', error);
+                if (!cached || cached.length === 0) {
+                    setTaskClaims({});
+                }
+                setTaskClaimsReady(true);
             });
+
+        return () => {
+            canceled = true;
+        };
     }, [user.id]);
 
     const isClaimedIn24h = (taskId: string) => {
@@ -50,7 +79,11 @@ const TasksRewards: React.FC = () => {
                 return;
             }
 
-            setTaskClaims((prev) => ({ ...prev, [taskId]: new Date().toISOString() }));
+            const claimedAt = new Date().toISOString();
+            setTaskClaims((prev) => ({ ...prev, [taskId]: claimedAt }));
+            if (user.id) {
+                taskClaimsService.upsertCachedClaim(user.id, taskId, claimedAt);
+            }
             await refreshData();
             setTaskHint(`领取成功：+${reward.coins}金币 / +${reward.xp}XP / +${reward.energy}能量`);
         } catch (error) {
@@ -104,6 +137,9 @@ const TasksRewards: React.FC = () => {
     };
 
     const getTaskState = (id: string, isReady: boolean, defaultAction: () => void, reward: { coins: number; xp: number; energy: number }) => {
+        if (!taskClaimsReady) {
+            return { actionText: '加载中', isPrimary: false, onClick: undefined };
+        }
         if (isClaimedIn24h(id)) {
             return { actionText: "已完成", isPrimary: false, onClick: undefined };
         }
@@ -338,6 +374,8 @@ const TaskItem: React.FC<{ icon: string, color: string, title: string, reward: s
     };
 
     const isCompleted = actionText === "已完成";
+    const isLoading = actionText === '加载中';
+    const isDisabled = !onClick;
 
     return (
         <div className={`flex items-center gap-4 bg-surface-light dark:bg-surface-dark rounded-xl p-3 shadow-sm border transition-colors ${isPrimary ? 'border-primary/20 relative overflow-hidden shadow-md' : 'border-transparent hover:border-primary/30'}`}>
@@ -348,15 +386,17 @@ const TaskItem: React.FC<{ icon: string, color: string, title: string, reward: s
             <div className="flex flex-col justify-center flex-1">
                 <p className="text-text-main-light dark:text-text-main-dark text-base font-bold leading-normal">{title}</p>
                 <p className="text-primary font-bold text-sm flex items-center gap-1">
-                    <span className="material-symbols-outlined text-sm">add_circle</span> {reward} 金币
+                    <span className="material-symbols-outlined text-sm">add_circle</span> {reward}
                 </p>
             </div>
             <button 
                 onClick={!isCompleted ? onClick : undefined}
+                disabled={isDisabled}
                 className={`flex shrink-0 min-w-[70px] cursor-pointer items-center justify-center rounded-lg h-9 px-3 text-sm font-bold active:translate-y-1 transition-all 
                 ${isPrimary ? 'bg-primary text-white shadow-3d-primary' : 
-                  isCompleted ? 'bg-gray-100 dark:bg-gray-800 text-gray-400 cursor-default shadow-none active:translate-y-0' : 
-                  'bg-gray-100 dark:bg-neutral-700 text-text-main-light dark:text-text-main-dark shadow-3d'}`}
+                  isCompleted || isLoading ? 'bg-gray-100 dark:bg-gray-800 text-gray-400 cursor-default shadow-none active:translate-y-0' : 
+                  'bg-gray-100 dark:bg-neutral-700 text-text-main-light dark:text-text-main-dark shadow-3d'}
+                ${isDisabled ? 'cursor-not-allowed' : ''}`}
             >
                 {actionText}
             </button>
