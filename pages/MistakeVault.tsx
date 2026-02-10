@@ -133,24 +133,6 @@ const MistakeVault: React.FC = () => {
         return finalDisplayList.filter((item) => selectedIds.includes(item.id));
     }, [finalDisplayList, selectedIds]);
 
-    const normalizeQuestionForPdf = (raw: string) => {
-        return (raw || '')
-            .replace(/\r\n/g, '\n')
-            .replace(/\$\$([^$]+)\$\$/g, '$1')
-            .replace(/\$([^$]+)\$/g, '$1')
-            .replace(/\\\((.*?)\\\)/g, '$1')
-            .replace(/\\\[(.*?)\\\]/g, '$1')
-            .replace(/\\left|\\right/g, '')
-            .replace(/\\times|\\cdot/g, '×')
-            .replace(/\\div/g, '÷')
-            .replace(/\\leq\b|\\le\b/g, '≤')
-            .replace(/\\geq\b|\\ge\b/g, '≥')
-            .replace(/\\neq/g, '≠')
-            .replace(/[{}]/g, '')
-            .replace(/[ \t]{2,}/g, ' ')
-            .trim();
-    };
-
     const renderQuestionPageDataUrl = async (item: any, index: number, pageWidthPt: number, pageHeightPt: number) => {
         const scale = 2;
         const canvas = document.createElement('canvas');
@@ -162,8 +144,6 @@ const MistakeVault: React.FC = () => {
         const drawW = canvas.width;
         const drawH = canvas.height;
         const padding = 40 * scale;
-        const lineHeight = 26 * scale;
-
         ctx.fillStyle = '#ffffff';
         ctx.fillRect(0, 0, drawW, drawH);
 
@@ -206,36 +186,8 @@ const MistakeVault: React.FC = () => {
             y += fit();
         }
 
-        y += 12 * scale;
-        ctx.fillStyle = '#111111';
-        ctx.font = `${16 * scale}px "Microsoft YaHei", "PingFang SC", sans-serif`;
-
-        const text = normalizeQuestionForPdf(item.questionText || item.desc || '暂无题目内容');
-        const maxTextWidth = drawW - padding * 2;
-        const paragraphs = text.split('\n');
-
-        const drawWrappedLine = (rawLine: string) => {
-            const line = rawLine || ' ';
-            let segment = '';
-            for (const ch of line) {
-                const test = segment + ch;
-                const width = ctx.measureText(test).width;
-                if (width > maxTextWidth && segment) {
-                    ctx.fillText(segment, padding, y);
-                    y += lineHeight;
-                    segment = ch;
-                } else {
-                    segment = test;
-                }
-            }
-            ctx.fillText(segment, padding, y);
-            y += lineHeight;
-        };
-
-        paragraphs.forEach((p) => {
-            drawWrappedLine(p);
-            y += 6 * scale;
-        });
+        // PDF now uses captured image as the primary review source.
+        // Intentionally does not print OCR text again to avoid duplication.
 
         return canvas.toDataURL('image/png');
     };
