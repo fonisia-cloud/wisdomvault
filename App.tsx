@@ -29,11 +29,7 @@ const AppContent: React.FC = () => {
     }
 
     // Font Size Class logic
-    const fontClass = {
-        'small': 'text-sm',
-        'medium': 'text-base',
-        'large': 'text-lg'
-    }[appSettings.fontSize] || 'text-base';
+    const fontClass = 'text-base';
 
     return (
         // 1. 软件需要自适应iPhone和ipad 的分辨率

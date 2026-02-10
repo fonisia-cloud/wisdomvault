@@ -301,9 +301,11 @@ const MistakeVault: React.FC = () => {
                 {/* Subjects Grid (Dynamic based on mistakes) */}
                 <div className="px-5 pt-4 pb-2 flex justify-between items-end">
                     <h2 className="text-gray-900 dark:text-white text-[22px] font-bold leading-tight">学科世界</h2>
-                    <span className="text-primary text-sm font-bold cursor-pointer" onClick={() => setActiveTag(null)}>
-                        {activeTag ? '显示全部' : '查看地图'}
-                    </span>
+                    {activeTag ? (
+                        <button className="text-primary text-sm font-bold" onClick={() => setActiveTag(null)}>
+                            显示全部
+                        </button>
+                    ) : <div className="w-16" />}
                 </div>
                 
                 {/* Dynamic Subject List */}

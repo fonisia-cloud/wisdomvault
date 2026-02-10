@@ -227,11 +227,8 @@ const AITutor: React.FC = () => {
           <SuggestionChip icon="🤷" text="还是不太明白" onClick={() => handleSendMessage('我还是不太明白，能详细说说吗？')} />
         </div>
         <div className="flex items-center gap-2 bg-background-light dark:bg-background-dark p-2 rounded-full border border-gray-200 dark:border-gray-700 focus-within:border-primary focus-within:ring-1 focus-within:ring-primary transition-all">
-          <button className="p-2 text-text-sec-light dark:text-text-sec-dark hover:text-primary transition-colors">
-            <span className="material-symbols-outlined">add_circle</span>
-          </button>
           <input
-            className="flex-1 bg-transparent border-none focus:ring-0 text-text-main-light dark:text-text-main-dark placeholder-text-sec-light/50 text-base outline-none"
+            className="flex-1 min-w-0 bg-transparent border-none focus:ring-0 text-text-main-light dark:text-text-main-dark placeholder-text-sec-light/50 text-base outline-none"
             placeholder="输入你的想法..."
             type="text"
             value={inputText}
@@ -241,7 +238,7 @@ const AITutor: React.FC = () => {
           <button
             onClick={() => handleSendMessage(inputText)}
             disabled={isSending}
-            className="p-2 bg-primary text-text-main-light rounded-full w-10 h-10 flex items-center justify-center hover:bg-primary/90 transition-colors shadow-sm active:scale-95 disabled:opacity-60"
+            className="shrink-0 p-2 bg-primary text-text-main-light rounded-full w-10 h-10 flex items-center justify-center hover:bg-primary/90 transition-colors shadow-sm active:scale-95 disabled:opacity-60"
           >
             <span className="material-symbols-outlined">send</span>
           </button>

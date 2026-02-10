@@ -14,6 +14,11 @@ body,
   width: 100%;
 }
 
+html {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
 body {
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
@@ -49,4 +54,10 @@ a,
 
 .katex {
   font-size: 1.02em;
+}
+
+input,
+textarea,
+select {
+  font-size: 16px;
 }
