@@ -57,7 +57,7 @@ const AppContent: React.FC = () => {
                 </div>
             )}
 
-            <div className="w-full max-w-[min(100%,1024px)] min-h-[100svh] flex flex-col bg-surface-light dark:bg-[#1a1810] shadow-2xl relative">
+            <div className="w-full max-w-[min(100%,1024px)] min-h-[100svh] flex flex-col bg-surface-light dark:bg-[#1a1810] shadow-2xl relative pb-[env(safe-area-inset-bottom)]">
                 <Routes>
                     <Route path="/" element={<Onboarding />} />
                     <Route path="/home" element={<Home />} />

@@ -28,7 +28,13 @@ a,
 }
 
 .safe-top-pad {
-  padding-top: max(env(safe-area-inset-top), 0.5rem);
+  padding-top: env(safe-area-inset-top);
+}
+
+@supports (padding-top: max(0px)) {
+  .safe-top-pad {
+    padding-top: max(env(safe-area-inset-top), 0.5rem);
+  }
 }
 
 .safe-bottom {
