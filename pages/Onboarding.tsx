@@ -55,7 +55,10 @@ const Onboarding: React.FC = () => {
             return;
         }
 
+        (document.activeElement as HTMLElement | null)?.blur();
         setShowRegister(false);
+        window.scrollTo(0, 0);
+        setTimeout(() => navigate('/home', { replace: true }), 60);
     };
 
     const handleLoginSubmit = async (e: React.FormEvent) => {
@@ -73,7 +76,10 @@ const Onboarding: React.FC = () => {
             return;
         }
 
+        (document.activeElement as HTMLElement | null)?.blur();
         setShowLogin(false);
+        window.scrollTo(0, 0);
+        setTimeout(() => navigate('/home', { replace: true }), 60);
     };
 
     return (

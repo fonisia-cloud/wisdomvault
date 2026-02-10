@@ -88,7 +88,7 @@ Deno.serve(async (req) => {
       model: iflowVisionModel,
       stream: false,
       temperature: 0.2,
-      max_tokens: 800,
+      max_tokens: 320,
       messages: [
         {
           role: 'system',
@@ -113,14 +113,18 @@ Deno.serve(async (req) => {
       ]
     };
 
+    const abortController = new AbortController();
+    const timeout = setTimeout(() => abortController.abort(), 12000);
+
     const response = await fetch(`${iflowBaseUrl}/chat/completions`, {
       method: 'POST',
       headers: {
         Authorization: `Bearer ${iflowApiKey}`,
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify(payload)
-    });
+      body: JSON.stringify(payload),
+      signal: abortController.signal
+    }).finally(() => clearTimeout(timeout));
 
     const json = await response.json();
 

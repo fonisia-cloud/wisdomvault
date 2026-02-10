@@ -300,23 +300,18 @@ const MistakeCapture: React.FC = () => {
   };
 
   const runSmartRecognition = async () => {
-    const candidates: CropBox[] = IS_IOS
-      ? [crop, expandCrop(crop, 1.15), { x: 0, y: 0, w: 1, h: 1 }]
-      : [crop, expandCrop(crop, 1.2), expandCrop(crop, 1.4), { x: 0, y: 0, w: 1, h: 1 }];
+    const primary = await createCroppedDataUrlByBox(crop);
+    const primaryText = await ocrService.recognizeQuestion(primary);
+    if (looksValidOcrText(primaryText)) return primaryText.slice(0, 5000);
 
-    let bestText = '';
-
-    for (const box of candidates) {
-      const dataUrl = await createCroppedDataUrlByBox(box);
-      const text = await ocrService.recognizeQuestion(dataUrl);
-      await new Promise((resolve) => setTimeout(resolve, 50));
-      if (looksValidOcrText(text)) {
-        return text.slice(0, 5000);
-      }
-      if (text.length > bestText.length) bestText = text;
+    if (primaryText.trim().length > 24) {
+      return primaryText.slice(0, 5000);
     }
 
-    return bestText.slice(0, 5000);
+    // Fallback once with full image if primary crop is too sparse.
+    const full = await createCroppedDataUrlByBox({ x: 0, y: 0, w: 1, h: 1 });
+    const fallbackText = await ocrService.recognizeQuestion(full);
+    return (fallbackText || primaryText).slice(0, 5000);
   };
 
   const handleRecognize = async () => {

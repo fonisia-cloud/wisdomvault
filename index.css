@@ -62,7 +62,7 @@ a,
 
 @supports (padding-top: max(0px)) {
   .safe-top-pad {
-    padding-top: max(env(safe-area-inset-top), 0.5rem);
+    padding-top: max(env(safe-area-inset-top), 0.75rem) !important;
   }
 }
 

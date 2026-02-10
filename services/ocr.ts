@@ -9,10 +9,16 @@ const getFunctionHeaders = async () => {
 export const ocrService = {
   async recognizeQuestion(imageDataUrl: string) {
     const headers = await getFunctionHeaders();
-    const { data, error } = await supabase.functions.invoke('ocr-question', {
+    const invokePromise = supabase.functions.invoke('ocr-question', {
       body: { imageDataUrl },
       headers
     });
+
+    const timeoutPromise = new Promise<never>((_, reject) => {
+      window.setTimeout(() => reject(new Error('OCR 识别超时，请重试或缩小识别区域。')), 15000);
+    });
+
+    const { data, error } = (await Promise.race([invokePromise, timeoutPromise])) as Awaited<typeof invokePromise>;
 
     if (error) {
       let detail = error.message;

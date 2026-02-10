@@ -3,7 +3,7 @@ import { NavLink } from 'react-router-dom';
 
 const BottomNav: React.FC = () => {
     return (
-        <nav className="fixed inset-x-0 bottom-0 z-40 border-t border-black/5 dark:border-white/5 bg-surface-light dark:bg-surface-dark px-4 pt-2 pb-[calc(env(safe-area-inset-bottom)+0.5rem)] shadow-[0_-4px_10px_rgba(0,0,0,0.02)] mx-auto w-full max-w-[min(100%,1024px)]">
+        <nav className="fixed inset-x-0 bottom-0 z-40 border-t border-black/5 dark:border-white/5 bg-surface-light dark:bg-surface-dark px-4 pt-2 pb-[max(env(safe-area-inset-bottom),0.1rem)] shadow-[0_-4px_10px_rgba(0,0,0,0.02)] mx-auto w-full max-w-[min(100%,1024px)]">
             <div className="flex justify-around items-end">
                 <NavItem to="/home" icon="home" label="首页" />
                 <NavItem to="/vault" icon="menu_book" label="错题库" hasBadge />

@@ -35,7 +35,7 @@ const Home: React.FC = () => {
     return (
         <div className="relative flex-1 flex flex-col pb-28 font-display bg-background-light dark:bg-background-dark w-full min-h-[100svh] ios-scroll">
             {/* Header */}
-            <header className="relative z-20 flex items-center justify-between bg-surface-light/95 dark:bg-surface-dark/95 p-4 pb-2 border-b border-black/5 dark:border-white/5 w-full safe-top-pad">
+            <header className="relative z-20 flex items-center justify-between bg-surface-light/95 dark:bg-surface-dark/95 border-b border-black/5 dark:border-white/5 w-full px-4 pb-2 pt-[calc(env(safe-area-inset-top)+0.9rem)]">
                 <div className="flex items-center gap-3">
                     <div className="relative cursor-pointer" onClick={() => navigate('/profile')}>
                         <div className="bg-center bg-no-repeat bg-cover rounded-full size-12 ring-2 ring-primary ring-offset-2 ring-offset-background-light dark:ring-offset-background-dark" style={{ backgroundImage: `url("${IMAGES.avatarWizard}")` }}></div>
