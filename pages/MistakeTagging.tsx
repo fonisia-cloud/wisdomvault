@@ -81,7 +81,7 @@ const MistakeTagging: React.FC = () => {
     return (
         <div className="relative flex h-full min-h-[100svh] w-full flex-col font-display antialiased text-[#181611] dark:text-gray-100 transition-colors duration-200">
             {/* Header */}
-            <div className="flex items-center bg-background-light dark:bg-background-dark p-4 sticky top-0 z-10">
+            <div className="flex items-center bg-background-light dark:bg-background-dark p-4 sticky top-0 z-10 safe-top-pad">
                 <button onClick={() => navigate(-1)} className="text-[#181611] dark:text-white flex size-10 shrink-0 items-center justify-center rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors">
                     <span className="material-symbols-outlined">arrow_back</span>
                 </button>

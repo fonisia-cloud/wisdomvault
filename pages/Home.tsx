@@ -15,10 +15,19 @@ const Home: React.FC = () => {
         return { done, total, percent };
     }, [mistakes]);
 
+    const displayedLevels = useMemo(() => {
+        const levels = [...LEVEL_SYSTEM].reverse();
+        const currentIndex = levels.findIndex((lvl) => lvl.level === currentLevel.level);
+        if (currentIndex < 0) return levels.slice(0, 4);
+
+        const start = Math.max(0, Math.min(currentIndex - 1, levels.length - 4));
+        return levels.slice(start, start + 4);
+    }, [currentLevel.level]);
+
     return (
-        <div className="relative flex-1 flex flex-col pb-32 font-display bg-background-light dark:bg-background-dark w-full min-h-[100svh]">
+        <div className="relative flex-1 flex flex-col pb-28 font-display bg-background-light dark:bg-background-dark w-full min-h-[100svh]">
             {/* Header */}
-            <header className="sticky top-0 z-20 flex items-center justify-between bg-surface-light/95 dark:bg-surface-dark/95 backdrop-blur-md p-4 pb-2 border-b border-black/5 dark:border-white/5 w-full">
+            <header className="sticky top-0 z-20 flex items-center justify-between bg-surface-light/95 dark:bg-surface-dark/95 p-4 pb-2 border-b border-black/5 dark:border-white/5 w-full safe-top-pad">
                 <div className="flex items-center gap-3">
                     <div className="relative cursor-pointer" onClick={() => navigate('/profile')}>
                         <div className="bg-center bg-no-repeat bg-cover rounded-full size-12 ring-2 ring-primary ring-offset-2 ring-offset-background-light dark:ring-offset-background-dark" style={{ backgroundImage: `url("${IMAGES.avatarWizard}")` }}></div>
@@ -79,7 +88,7 @@ const Home: React.FC = () => {
                 </div>
 
                 {/* Map Area */}
-                <div className="relative flex-1 flex flex-col items-center px-4 py-8 md:p-0">
+                <div className="relative flex-1 flex flex-col items-center px-4 py-6 md:p-0">
                     {/* Decorative Background */}
                     <div className="absolute inset-0 z-0 pointer-events-none opacity-5 dark:opacity-10 overflow-hidden md:rounded-3xl md:bg-gray-100 md:dark:bg-white/5">
                         <div className="absolute top-20 left-10 text-9xl">☁️</div>
@@ -88,31 +97,30 @@ const Home: React.FC = () => {
                         <div className="absolute bottom-10 right-20 text-9xl">🏰</div>
                     </div>
 
-                    <h3 className="z-10 text-text-sec-light dark:text-text-sec-dark font-bold text-sm tracking-widest uppercase mb-8 md:mt-8">冒险地图</h3>
+                    <h3 className="z-10 text-text-sec-light dark:text-text-sec-dark font-bold text-sm tracking-widest uppercase mb-5 md:mt-6">冒险地图</h3>
                     
-                    <div className="z-10 flex flex-col items-center gap-0 w-full max-w-md relative pb-20">
-                        {/* Dynamic Map Generation - Reversed so Level 1 is at bottom */}
-                        {[...LEVEL_SYSTEM].reverse().map((lvl, index) => {
+                    <div className="z-10 flex flex-col items-center gap-0 w-full max-w-md relative pb-10">
+                        {displayedLevels.map((lvl, index) => {
                             const isCurrent = lvl.level === currentLevel.level;
                             const isLocked = lvl.level > currentLevel.level;
                             const isCompleted = lvl.level < currentLevel.level;
                             
                             // Simple zigzag effect based on index
-                            const translateClass = index % 3 === 0 ? 'translate-x-0' : index % 3 === 1 ? 'translate-x-12' : '-translate-x-12';
+                            const translateClass = index % 3 === 0 ? 'translate-x-0' : index % 3 === 1 ? 'translate-x-8' : '-translate-x-8';
                             
                             return (
                                 <React.Fragment key={lvl.level}>
                                     <div className={`relative flex items-center justify-center w-full mb-2 ${isLocked ? 'opacity-60 grayscale' : ''}`}>
                                         <div className={`${translateClass} flex flex-col items-center gap-2 relative`}>
-                                            {isCurrent && <div className="absolute -inset-4 bg-primary/20 rounded-full animate-pulse z-0"></div>}
-                                            
+                                            {isCurrent && <div className="absolute -inset-3 bg-primary/20 rounded-full z-0"></div>}
+                                             
                                             <div 
-                                                className={`size-16 md:size-20 rounded-full border-4 flex items-center justify-center shadow-md relative z-10 transition-transform 
+                                                className={`size-14 md:size-16 rounded-full border-4 flex items-center justify-center shadow-md relative z-10 transition-transform 
                                                 ${isCurrent ? 'bg-primary border-white dark:border-background-dark scale-110' : 
                                                   isCompleted ? 'bg-green-500 border-white dark:border-background-dark cursor-pointer' : 
                                                   'bg-surface-light dark:bg-surface-dark border-gray-200 dark:border-gray-700'}`}
                                             >
-                                                <span className={`material-symbols-outlined text-3xl md:text-4xl 
+                                                <span className={`material-symbols-outlined text-2xl md:text-3xl 
                                                     ${isCurrent ? 'text-text-main-light' : 
                                                       isCompleted ? 'text-white' : 'text-gray-400'}`}>
                                                     {isLocked ? 'lock' : isCompleted ? 'check' : 'star'}
@@ -130,8 +138,8 @@ const Home: React.FC = () => {
                                         </div>
                                     </div>
                                     {/* Path Connector */}
-                                    {index < LEVEL_SYSTEM.length - 1 && (
-                                        <div className={`h-16 w-1 border-l-4 border-dashed my-1 ${isLocked ? 'border-gray-300 dark:border-gray-700 opacity-30' : 'border-primary opacity-50'} 
+                                     {index < displayedLevels.length - 1 && (
+                                        <div className={`h-10 w-1 border-l-4 border-dashed my-1 ${isLocked ? 'border-gray-300 dark:border-gray-700 opacity-30' : 'border-primary opacity-50'} 
                                             ${index % 3 === 0 ? 'translate-x-6' : index % 3 === 1 ? '-translate-x-2' : 'translate-x-6'}`}>
                                         </div>
                                     )}

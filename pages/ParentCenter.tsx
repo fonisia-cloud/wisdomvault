@@ -103,10 +103,10 @@ const ParentCenter: React.FC = () => {
 
     return (
         <div className="flex flex-col min-h-[100dvh] w-full bg-background-light dark:bg-background-dark font-display">
-            <header className="flex items-center px-4 py-3 sticky top-0 z-20 bg-background-light/95 dark:bg-background-dark/95 backdrop-blur-sm border-b border-black/5 dark:border-white/5">
-                <div onClick={() => navigate(-1)} className="flex size-10 shrink-0 items-center justify-center rounded-full bg-surface-light dark:bg-surface-dark shadow-sm cursor-pointer active:scale-95 transition-transform border border-black/5 dark:border-white/5">
+            <header className="flex items-center px-4 py-3 sticky top-0 z-20 bg-background-light/95 dark:bg-background-dark/95 border-b border-black/5 dark:border-white/5 safe-top-pad">
+                <button onClick={() => navigate(-1)} className="flex size-10 shrink-0 items-center justify-center rounded-full bg-surface-light dark:bg-surface-dark shadow-sm cursor-pointer active:scale-95 transition-transform border border-black/5 dark:border-white/5">
                     <span className="material-symbols-outlined text-text-main-light dark:text-text-main-dark">arrow_back</span>
-                </div>
+                </button>
                 <h2 className="text-text-main-light dark:text-text-main-dark text-lg font-bold leading-tight flex-1 text-center pr-10">家长控制</h2>
             </header>
 

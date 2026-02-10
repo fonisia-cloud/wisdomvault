@@ -8,8 +8,8 @@ const Profile: React.FC = () => {
     const { user, currentLevel, nextLevel, progressToNextLevel, logout } = useUser();
 
     return (
-        <div className="relative flex h-full w-full min-h-[100dvh] flex-col font-display text-text-main-light dark:text-text-main-dark bg-background-light dark:bg-background-dark">
-            <header className="relative bg-surface-light dark:bg-surface-dark pb-6 pt-12 px-6 rounded-b-[2rem] shadow-sm z-10 border-b border-black/5 dark:border-white/5 md:mx-auto md:w-full md:max-w-4xl md:rounded-none md:bg-transparent md:border-none">
+        <div className="relative flex h-full w-full min-h-[100svh] flex-col font-display text-text-main-light dark:text-text-main-dark bg-background-light dark:bg-background-dark">
+            <header className="relative bg-surface-light dark:bg-surface-dark pb-6 pt-[calc(env(safe-area-inset-top)+1rem)] px-6 rounded-b-[2rem] shadow-sm z-10 border-b border-black/5 dark:border-white/5 md:mx-auto md:w-full md:max-w-4xl md:rounded-none md:bg-transparent md:border-none">
                 <div className="absolute top-4 right-4 md:hidden">
                     <button onClick={() => navigate('/settings')} className="p-2 text-text-sec-light dark:text-text-sec-dark hover:text-text-main-light transition-colors">
                         <span className="material-symbols-outlined">settings</span>

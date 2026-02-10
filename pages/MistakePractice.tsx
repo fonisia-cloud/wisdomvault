@@ -43,7 +43,7 @@ const MistakePractice: React.FC = () => {
 
   return (
     <div className="min-h-[100svh] bg-background-light dark:bg-background-dark flex flex-col pb-24">
-      <header className="sticky top-0 z-10 bg-surface-light/95 dark:bg-surface-dark/95 backdrop-blur border-b border-black/5 dark:border-white/10 p-4 flex items-center gap-3">
+      <header className="sticky top-0 z-10 bg-surface-light/95 dark:bg-surface-dark/95 border-b border-black/5 dark:border-white/10 p-4 flex items-center gap-3 safe-top-pad">
         <button onClick={() => navigate('/vault')} className="size-10 rounded-full hover:bg-black/5 dark:hover:bg-white/10 flex items-center justify-center">
           <span className="material-symbols-outlined">arrow_back</span>
         </button>

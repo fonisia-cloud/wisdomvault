@@ -235,10 +235,10 @@ const MistakeVault: React.FC = () => {
 
     return (
         <div className="relative flex h-full min-h-[100svh] w-full flex-col font-display antialiased pb-24 bg-background-light dark:bg-background-dark">
-            <div className="flex items-center px-4 py-4 justify-between sticky top-0 z-10 bg-background-light/90 dark:bg-background-dark/90 backdrop-blur-sm md:max-w-4xl md:mx-auto md:w-full">
-                <div onClick={() => navigate('/home')} className="text-gray-900 dark:text-white flex size-12 shrink-0 items-center justify-start cursor-pointer transition-transform active:scale-95">
+            <div className="flex items-center px-4 py-4 justify-between sticky top-0 z-10 bg-background-light/90 dark:bg-background-dark/90 md:max-w-4xl md:mx-auto md:w-full safe-top-pad">
+                <button onClick={() => navigate('/home')} className="text-gray-900 dark:text-white flex size-12 shrink-0 items-center justify-start cursor-pointer transition-transform active:scale-95">
                     <span className="material-symbols-outlined text-3xl">arrow_back</span>
-                </div>
+                </button>
                 <h2 className="text-gray-900 dark:text-white text-xl font-extrabold leading-tight tracking-tight flex-1 text-center">错题宝库</h2>
                 <div className="flex w-12 items-center justify-end">
                     <button onClick={toggleSelectMode} className="size-10 rounded-full bg-gray-100 dark:bg-[#393528] flex items-center justify-center text-gray-700 dark:text-gray-200">

@@ -46,7 +46,7 @@ const ReviewPlan: React.FC = () => {
 
     return (
         <div className="relative flex min-h-[100dvh] w-full flex-col shadow-2xl overflow-hidden bg-background-light dark:bg-background-dark font-display">
-             <div className="flex items-center p-4 pb-2 justify-between z-50 sticky top-0 bg-background-light/95 dark:bg-background-dark/95 backdrop-blur-md">
+             <div className="flex items-center p-4 pb-2 justify-between z-50 sticky top-0 bg-background-light/95 dark:bg-background-dark/95 safe-top-pad">
                 <button 
                     onClick={() => navigate(-1)} 
                     className="flex size-12 shrink-0 items-center justify-center rounded-full hover:bg-black/5 dark:hover:bg-white/10 transition-colors cursor-pointer"

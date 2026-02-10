@@ -146,7 +146,7 @@ const AITutor: React.FC = () => {
 
   return (
     <div className="bg-background-light dark:bg-background-dark font-display min-h-[100svh] flex flex-col overflow-hidden">
-      <header className="flex-none bg-surface-light dark:bg-surface-dark border-b border-gray-100 dark:border-gray-800 pb-4 pt-2">
+      <header className="flex-none bg-surface-light dark:bg-surface-dark border-b border-gray-100 dark:border-gray-800 pb-4 pt-2 safe-top-pad">
         <div className="flex items-center justify-between px-4 pb-4">
           <button onClick={() => navigate(-1)} className="flex items-center justify-center w-10 h-10 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors text-text-main-light dark:text-text-main-dark">
             <span className="material-symbols-outlined">arrow_back</span>

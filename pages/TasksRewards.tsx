@@ -136,11 +136,11 @@ const TasksRewards: React.FC = () => {
     const task3 = getTaskState('review_5', hasReviewedFive, () => navigate('/review'), task3Reward);
 
     return (
-        <div className="relative flex h-full min-h-[100dvh] w-full flex-col font-display pb-32">
-            <header className="flex items-center px-4 py-3 justify-between sticky top-0 z-20 bg-background-light/95 dark:bg-background-dark/95 backdrop-blur-sm">
-                <div onClick={() => navigate(-1)} className="flex size-10 shrink-0 items-center justify-center rounded-full bg-surface-light dark:bg-surface-dark shadow-sm cursor-pointer active:scale-95 transition-transform">
+        <div className="relative flex h-full min-h-[100svh] w-full flex-col font-display pb-32">
+            <header className="flex items-center px-4 py-3 justify-between sticky top-0 z-20 bg-background-light/95 dark:bg-background-dark/95 safe-top-pad">
+                <button onClick={() => navigate(-1)} className="flex size-10 shrink-0 items-center justify-center rounded-full bg-surface-light dark:bg-surface-dark shadow-sm cursor-pointer active:scale-95 transition-transform">
                     <span className="material-symbols-outlined text-text-main-light dark:text-text-main-dark">arrow_back</span>
-                </div>
+                </button>
                 <h2 className="text-text-main-light dark:text-text-main-dark text-lg font-bold leading-tight flex-1 text-center">任务与奖励</h2>
                 <div className="flex w-10 items-center justify-end">
                     {/* Settings button removed */}
