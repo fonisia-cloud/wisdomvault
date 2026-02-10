@@ -18,11 +18,16 @@ const Onboarding: React.FC = () => {
     const [loginIdentifier, setLoginIdentifier] = useState('');
     const [loginPassword, setLoginPassword] = useState('');
     const [authError, setAuthError] = useState('');
+    const isAuthModalOpen = showRegister || showLogin;
 
     // If already logged in, redirect to home
     React.useEffect(() => {
         if (user.isAuthenticated) {
-            navigate('/home');
+            const active = document.activeElement as HTMLElement | null;
+            active?.blur();
+            setShowLogin(false);
+            setShowRegister(false);
+            navigate('/home', { replace: true });
         }
     }, [user.isAuthenticated, navigate]);
 
@@ -76,7 +81,7 @@ const Onboarding: React.FC = () => {
             <div className="absolute top-[-10%] right-[-20%] w-[400px] h-[400px] bg-primary/10 rounded-full blur-3xl pointer-events-none"></div>
             <div className="absolute bottom-[-10%] left-[-10%] w-[300px] h-[300px] bg-blue-500/10 rounded-full blur-3xl pointer-events-none"></div>
 
-            <main className="flex-1 flex flex-col items-center justify-between px-4 pb-6 pt-[max(env(safe-area-inset-top),0.75rem)] z-10 w-full max-w-md mx-auto">
+            <main className={`flex-1 flex flex-col items-center justify-between px-4 pb-6 pt-[max(env(safe-area-inset-top),0.75rem)] z-10 w-full max-w-md mx-auto transition-opacity ${isAuthModalOpen ? 'opacity-0 pointer-events-none' : 'opacity-100'}`}>
                 <div className="flex-1 flex flex-col items-center justify-center w-full mt-2">
                     <div className="relative w-full max-w-[220px] aspect-square flex items-center justify-center mb-4">
                         <div className="absolute inset-4 bg-gradient-to-tr from-primary/20 to-orange-200/20 rounded-full border-4 border-white dark:border-white/10 shadow-2xl"></div>
@@ -153,7 +158,7 @@ const Onboarding: React.FC = () => {
             {showRegister && (
                 <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-4 pb-[calc(env(safe-area-inset-bottom)+0.75rem)]">
                     <div 
-                        className="absolute inset-0 bg-black/60 backdrop-blur-sm transition-opacity" 
+                        className="absolute inset-0 bg-black/60 transition-opacity" 
                         onClick={() => setShowRegister(false)}
                     ></div>
                     <div className="relative w-full max-w-sm max-h-[85svh] overflow-y-auto bg-surface-light dark:bg-surface-dark rounded-[1.5rem] p-5 shadow-2xl flex flex-col items-center">
@@ -228,7 +233,7 @@ const Onboarding: React.FC = () => {
             {showLogin && (
                 <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-4 pb-[calc(env(safe-area-inset-bottom)+0.75rem)]">
                     <div 
-                        className="absolute inset-0 bg-black/60 backdrop-blur-sm transition-opacity" 
+                        className="absolute inset-0 bg-black/60 transition-opacity" 
                         onClick={() => setShowLogin(false)}
                     ></div>
                     <div className="relative w-full max-w-sm max-h-[85svh] overflow-y-auto bg-surface-light dark:bg-surface-dark rounded-[1.5rem] p-5 shadow-2xl flex flex-col items-center">
@@ -290,7 +295,7 @@ const Onboarding: React.FC = () => {
     );
 };
 
-const FeatureCard: React.FC<{ icon: string, color: string, title: string, desc: string }> = ({ icon, color, title, desc }) => {
+const FeatureCard: React.FC<{ icon: string, color: string, title: string, desc: string }> = React.memo(({ icon, color, title, desc }) => {
     const colorClasses: Record<string, string> = {
         blue: "bg-blue-50 dark:bg-blue-900/20 text-blue-500",
         yellow: "bg-yellow-50 dark:bg-yellow-900/20 text-yellow-500",
@@ -308,6 +313,6 @@ const FeatureCard: React.FC<{ icon: string, color: string, title: string, desc: 
             </p>
         </div>
     );
-};
+});
 
 export default Onboarding;

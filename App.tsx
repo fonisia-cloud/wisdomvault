@@ -19,6 +19,12 @@ import { UserProvider, useUser } from './contexts/UserContext';
 const AppContent: React.FC = () => {
     const location = useLocation();
     const { user, appSettings, parentSettings, isReady } = useUser();
+
+    React.useEffect(() => {
+        window.scrollTo(0, 0);
+        document.documentElement.scrollTop = 0;
+        document.body.scrollTop = 0;
+    }, [location.pathname]);
     
     // Screens that should show the bottom navigation
     const showBottomNav = ['/home', '/profile', '/tasks', '/vault'].includes(location.pathname);

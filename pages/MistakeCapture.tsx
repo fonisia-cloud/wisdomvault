@@ -29,6 +29,8 @@ const normalizeQuestionText = (raw: string) =>
     .replace(/\\\[(.*?)\\\]/g, '$1')
     .replace(/\\times|\\cdot/g, '×')
     .replace(/\\div/g, '÷')
+    .replace(/\\leq\b|\\le\b/g, '≤')
+    .replace(/\\geq\b|\\ge\b/g, '≥')
     .replace(/[{}]/g, '')
     .trim();
 
@@ -199,15 +201,49 @@ const MistakeCapture: React.FC = () => {
     dragStartRef.current = null;
   };
 
+  const getCropSourceRect = (box: CropBox) => {
+    const image = imageRef.current;
+    if (!image) throw new Error('Image not ready');
+
+    const cw = image.clientWidth;
+    const ch = image.clientHeight;
+    const nw = image.naturalWidth;
+    const nh = image.naturalHeight;
+    if (!cw || !ch || !nw || !nh) throw new Error('Image dimensions are invalid');
+
+    const renderedScale = Math.min(cw / nw, ch / nh);
+    const renderedW = nw * renderedScale;
+    const renderedH = nh * renderedScale;
+    const offsetX = (cw - renderedW) / 2;
+    const offsetY = (ch - renderedH) / 2;
+
+    const bx = box.x * cw;
+    const by = box.y * ch;
+    const bw = box.w * cw;
+    const bh = box.h * ch;
+
+    const ix = Math.max(offsetX, bx);
+    const iy = Math.max(offsetY, by);
+    const ir = Math.min(offsetX + renderedW, bx + bw);
+    const ib = Math.min(offsetY + renderedH, by + bh);
+
+    const iw = Math.max(2, ir - ix);
+    const ih = Math.max(2, ib - iy);
+
+    const sx = Math.max(0, Math.round((ix - offsetX) / renderedScale));
+    const sy = Math.max(0, Math.round((iy - offsetY) / renderedScale));
+    const sw = Math.max(2, Math.round(iw / renderedScale));
+    const sh = Math.max(2, Math.round(ih / renderedScale));
+
+    return { sx, sy, sw, sh };
+  };
+
   const createCroppedDataUrl = async () => {
     const image = imageRef.current;
     if (!image) throw new Error('Image not ready');
 
     const canvas = document.createElement('canvas');
-    const sx = Math.floor(crop.x * image.naturalWidth);
-    const sy = Math.floor(crop.y * image.naturalHeight);
-    const sw = Math.floor(crop.w * image.naturalWidth);
-    const sh = Math.floor(crop.h * image.naturalHeight);
+    const { sx, sy, sw, sh } = getCropSourceRect(crop);
 
     const edgeScale = Math.min(1, 1800 / Math.max(sw, sh));
     const targetW = Math.max(2, Math.round(sw * edgeScale));
@@ -227,10 +263,7 @@ const MistakeCapture: React.FC = () => {
     if (!image) throw new Error('Image not ready');
 
     const canvas = document.createElement('canvas');
-    const sx = Math.floor(box.x * image.naturalWidth);
-    const sy = Math.floor(box.y * image.naturalHeight);
-    const sw = Math.floor(box.w * image.naturalWidth);
-    const sh = Math.floor(box.h * image.naturalHeight);
+    const { sx, sy, sw, sh } = getCropSourceRect(box);
 
     const edgeScale = Math.min(1, MAX_OCR_EDGE / Math.max(sw, sh));
     const pixelScale = Math.min(1, Math.sqrt(MAX_OCR_PIXELS / Math.max(1, sw * sh)));

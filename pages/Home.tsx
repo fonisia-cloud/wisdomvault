@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { IMAGES } from '../constants';
 import { useUser, LEVEL_SYSTEM } from '../contexts/UserContext';
@@ -14,6 +14,14 @@ const Home: React.FC = () => {
         const percent = total > 0 ? Math.round((done / total) * 100) : 0;
         return { done, total, percent };
     }, [mistakes]);
+
+    useEffect(() => {
+        requestAnimationFrame(() => {
+            window.scrollTo(0, 0);
+            document.documentElement.scrollTop = 0;
+            document.body.scrollTop = 0;
+        });
+    }, []);
 
     const displayedLevels = useMemo(() => {
         const levels = [...LEVEL_SYSTEM].reverse();
