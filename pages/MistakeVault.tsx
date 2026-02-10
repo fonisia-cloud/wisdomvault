@@ -150,7 +150,7 @@ const MistakeVault: React.FC = () => {
             .trim();
     };
 
-    const renderQuestionPageDataUrl = (item: any, index: number, pageWidthPt: number, pageHeightPt: number) => {
+    const renderQuestionPageDataUrl = async (item: any, index: number, pageWidthPt: number, pageHeightPt: number) => {
         const scale = 2;
         const canvas = document.createElement('canvas');
         canvas.width = Math.floor(pageWidthPt * scale);
@@ -176,7 +176,36 @@ const MistakeVault: React.FC = () => {
         ctx.font = `${14 * scale}px "Microsoft YaHei", "PingFang SC", sans-serif`;
         ctx.fillText(`标签: ${item.tag1}   难度: ${item.tag2}`, padding, y);
 
-        y += 30 * scale;
+        y += 26 * scale;
+
+        const maxImageW = drawW - padding * 2;
+        const maxImageH = Math.floor(drawH * 0.38);
+        if (item.image && String(item.image).startsWith('data:image/')) {
+            const imageElement = new Image();
+            await new Promise<void>((resolve) => {
+                imageElement.onload = () => resolve();
+                imageElement.onerror = () => resolve();
+                imageElement.src = item.image;
+            });
+
+            const fit = () => {
+                const iw = imageElement.naturalWidth || maxImageW;
+                const ih = imageElement.naturalHeight || maxImageH;
+                const ratio = Math.min(maxImageW / iw, maxImageH / ih, 1);
+                const rw = Math.floor(iw * ratio);
+                const rh = Math.floor(ih * ratio);
+                const x = padding + Math.floor((maxImageW - rw) / 2);
+                const roundedY = y;
+                ctx.fillStyle = '#f5f5f3';
+                ctx.fillRect(padding, roundedY, maxImageW, rh + 16);
+                ctx.drawImage(imageElement, x, roundedY + 8, rw, rh);
+                return rh + 24;
+            };
+
+            y += fit();
+        }
+
+        y += 12 * scale;
         ctx.fillStyle = '#111111';
         ctx.font = `${16 * scale}px "Microsoft YaHei", "PingFang SC", sans-serif`;
 
@@ -223,7 +252,7 @@ const MistakeVault: React.FC = () => {
                 const item = selectedItems[i];
                 if (i > 0) doc.addPage();
 
-                const pageDataUrl = renderQuestionPageDataUrl(item, i, pageWidth, pageHeight);
+                const pageDataUrl = await renderQuestionPageDataUrl(item, i, pageWidth, pageHeight);
                 doc.addImage(pageDataUrl, 'PNG', 0, 0, pageWidth, pageHeight, undefined, 'FAST');
             }
 

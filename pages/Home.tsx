@@ -25,9 +25,9 @@ const Home: React.FC = () => {
     }, [currentLevel.level]);
 
     return (
-        <div className="relative flex-1 flex flex-col pb-28 font-display bg-background-light dark:bg-background-dark w-full min-h-[100svh]">
+        <div className="relative flex-1 flex flex-col pb-28 font-display bg-background-light dark:bg-background-dark w-full min-h-[100svh] ios-scroll">
             {/* Header */}
-            <header className="sticky top-0 z-20 flex items-center justify-between bg-surface-light/95 dark:bg-surface-dark/95 p-4 pb-2 border-b border-black/5 dark:border-white/5 w-full safe-top-pad">
+            <header className="relative z-20 flex items-center justify-between bg-surface-light/95 dark:bg-surface-dark/95 p-4 pb-2 border-b border-black/5 dark:border-white/5 w-full safe-top-pad">
                 <div className="flex items-center gap-3">
                     <div className="relative cursor-pointer" onClick={() => navigate('/profile')}>
                         <div className="bg-center bg-no-repeat bg-cover rounded-full size-12 ring-2 ring-primary ring-offset-2 ring-offset-background-light dark:ring-offset-background-dark" style={{ backgroundImage: `url("${IMAGES.avatarWizard}")` }}></div>
@@ -151,10 +151,10 @@ const Home: React.FC = () => {
             </main>
             
             {/* Scan FAB */}
-            <div className="fixed bottom-[calc(env(safe-area-inset-bottom)+88px)] right-4 md:right-8 z-30">
+            <div className="fixed bottom-[calc(env(safe-area-inset-bottom)+92px)] right-4 md:right-8 z-50 pointer-events-none">
                 <button 
                     onClick={() => navigate('/capture')}
-                    className="flex cursor-pointer items-center justify-center overflow-hidden rounded-2xl h-14 bg-primary text-text-main-light shadow-[0_4px_12px_rgba(244,192,37,0.4)] hover:shadow-[0_6px_16px_rgba(244,192,37,0.5)] active:translate-y-0.5 transition-all min-w-0 gap-3 px-5 border-2 border-white dark:border-surface-dark group"
+                    className="pointer-events-auto flex cursor-pointer items-center justify-center overflow-hidden rounded-2xl h-14 bg-primary text-text-main-light shadow-[0_4px_12px_rgba(244,192,37,0.4)] hover:shadow-[0_6px_16px_rgba(244,192,37,0.5)] active:translate-y-0.5 transition-all min-w-0 gap-3 px-5 border-2 border-white dark:border-surface-dark group"
                 >
                     <div className="text-text-main-light group-hover:scale-110 transition-transform">
                         <span className="material-symbols-outlined">photo_camera</span>

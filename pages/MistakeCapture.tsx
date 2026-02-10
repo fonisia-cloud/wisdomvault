@@ -20,6 +20,18 @@ const MAX_EDITOR_EDGE = IS_IOS ? 1600 : 2200;
 const MAX_OCR_EDGE = IS_IOS ? 1024 : 1400;
 const MAX_OCR_PIXELS = IS_IOS ? 900_000 : 1_500_000;
 
+const normalizeQuestionText = (raw: string) =>
+  (raw || '')
+    .replace(/\\frac\s*\{([^{}]+)\}\s*\{([^{}]+)\}/g, '$1/$2')
+    .replace(/\$\$([^$]+)\$\$/g, '$1')
+    .replace(/\$([^$]+)\$/g, '$1')
+    .replace(/\\\((.*?)\\\)/g, '$1')
+    .replace(/\\\[(.*?)\\\]/g, '$1')
+    .replace(/\\times|\\cdot/g, '×')
+    .replace(/\\div/g, '÷')
+    .replace(/[{}]/g, '')
+    .trim();
+
 const MistakeCapture: React.FC = () => {
   const navigate = useNavigate();
   const cameraInputRef = useRef<HTMLInputElement>(null);
@@ -280,7 +292,7 @@ const MistakeCapture: React.FC = () => {
     setErrorText('');
 
     try {
-      const question = await runSmartRecognition();
+      const question = normalizeQuestionText(await runSmartRecognition());
       setRecognizeAttempts((prev) => prev + 1);
       if (!question.trim()) {
         setErrorText('未识别到完整题目，请调整题目框后再次识别。');
@@ -307,7 +319,7 @@ const MistakeCapture: React.FC = () => {
       if (!finalQuestion.trim()) {
         setIsRecognizing(true);
         try {
-          finalQuestion = await runSmartRecognition();
+          finalQuestion = normalizeQuestionText(await runSmartRecognition());
           setRecognizedQuestion(finalQuestion);
           setRecognizeAttempts((prev) => prev + 1);
         } finally {
