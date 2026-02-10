@@ -265,7 +265,7 @@ const MistakeVault: React.FC = () => {
                 </div>
             )}
 
-            <main className="flex-1 w-full md:max-w-4xl md:mx-auto">
+            <main className="flex-1 w-full md:max-w-4xl md:mx-auto ios-scroll">
                 {/* Search */}
                 <div className="px-5 py-2">
                     <label className="flex flex-col h-14 w-full shadow-lg dark:shadow-black/20 rounded-xl">

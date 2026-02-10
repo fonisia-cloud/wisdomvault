@@ -62,7 +62,7 @@ const MistakePractice: React.FC = () => {
             value={answerDraft}
             onChange={(e) => setAnswerDraft(e.target.value)}
             placeholder="写下你的解题步骤或答案..."
-            className="w-full h-36 resize-none bg-transparent outline-none text-sm"
+            className="w-full h-36 resize-none bg-transparent outline-none text-base"
           />
         </div>
 

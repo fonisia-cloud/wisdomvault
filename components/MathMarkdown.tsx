@@ -13,6 +13,8 @@ interface MathMarkdownProps {
 const normalizeMathBlocks = (text: string) => {
   return text
     .replace(/\r\n/g, '\n')
+    .replace(/\*\*(.*?)\*\*/g, '$1')
+    .replace(/__(.*?)__/g, '$1')
     .replace(/\\\$/g, '$')
     .replace(/\\times|\\cdot/g, '×')
     .replace(/\\div/g, '÷')

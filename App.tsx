@@ -54,22 +54,24 @@ const AppContent: React.FC = () => {
             )}
 
             <div className="w-full max-w-[min(100%,1024px)] min-h-[100svh] flex flex-col bg-surface-light dark:bg-[#1a1810] shadow-2xl relative pb-[env(safe-area-inset-bottom)]">
-                <Routes>
-                    <Route path="/" element={<Onboarding />} />
-                    <Route path="/home" element={<Home />} />
-                    <Route path="/profile" element={<Profile />} />
-                    <Route path="/tasks" element={<TasksRewards />} />
-                    <Route path="/review" element={<ReviewPlan />} />
-                    <Route path="/capture" element={<MistakeCapture />} />
-                    <Route path="/tagging" element={<MistakeTagging />} />
-                    <Route path="/vault" element={<MistakeVault />} />
-                    <Route path="/practice/:mistakeId" element={<MistakePractice />} />
-                    <Route path="/tutor" element={<AITutor />} />
-                    <Route path="/tutor/:mistakeId" element={<AITutor />} />
-                    <Route path="/achievements" element={<Achievements />} />
-                    <Route path="/parent-center" element={<ParentCenter />} />
-                    <Route path="/settings" element={<Settings />} />
-                </Routes>
+                <div key={location.pathname} className="page-transition flex-1 min-h-0">
+                    <Routes>
+                        <Route path="/" element={<Onboarding />} />
+                        <Route path="/home" element={<Home />} />
+                        <Route path="/profile" element={<Profile />} />
+                        <Route path="/tasks" element={<TasksRewards />} />
+                        <Route path="/review" element={<ReviewPlan />} />
+                        <Route path="/capture" element={<MistakeCapture />} />
+                        <Route path="/tagging" element={<MistakeTagging />} />
+                        <Route path="/vault" element={<MistakeVault />} />
+                        <Route path="/practice/:mistakeId" element={<MistakePractice />} />
+                        <Route path="/tutor" element={<AITutor />} />
+                        <Route path="/tutor/:mistakeId" element={<AITutor />} />
+                        <Route path="/achievements" element={<Achievements />} />
+                        <Route path="/parent-center" element={<ParentCenter />} />
+                        <Route path="/settings" element={<Settings />} />
+                    </Routes>
+                </div>
                 
                 {showBottomNav && <BottomNav />}
             </div>

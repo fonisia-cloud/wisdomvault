@@ -107,8 +107,8 @@ const MistakeCapture: React.FC = () => {
 
   const clamp = (value: number, min: number, max: number) => Math.min(max, Math.max(min, value));
 
-  const MIN_CROP_W = 0.2;
-  const MIN_CROP_H = 0.2;
+  const MIN_CROP_W = 0.16;
+  const MIN_CROP_H = 0.08;
 
   const onCropPointerDown = (e: React.PointerEvent<HTMLElement>, mode: DragMode = 'move') => {
     e.stopPropagation();
@@ -256,7 +256,7 @@ const MistakeCapture: React.FC = () => {
 
   const runSmartRecognition = async () => {
     const candidates: CropBox[] = IS_IOS
-      ? [crop]
+      ? [crop, expandCrop(crop, 1.15), { x: 0, y: 0, w: 1, h: 1 }]
       : [crop, expandCrop(crop, 1.2), expandCrop(crop, 1.4), { x: 0, y: 0, w: 1, h: 1 }];
 
     let bestText = '';

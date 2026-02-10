@@ -72,7 +72,7 @@ const Onboarding: React.FC = () => {
     };
 
     return (
-        <div className="relative flex min-h-[100svh] w-full flex-col overflow-x-hidden overflow-y-auto bg-background-light dark:bg-background-dark font-display">
+        <div className="relative flex min-h-[100svh] w-full flex-col overflow-x-hidden overflow-y-auto ios-scroll bg-background-light dark:bg-background-dark font-display">
             <div className="absolute top-[-10%] right-[-20%] w-[400px] h-[400px] bg-primary/10 rounded-full blur-3xl pointer-events-none"></div>
             <div className="absolute bottom-[-10%] left-[-10%] w-[300px] h-[300px] bg-blue-500/10 rounded-full blur-3xl pointer-events-none"></div>
 

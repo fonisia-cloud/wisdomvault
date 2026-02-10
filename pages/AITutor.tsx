@@ -178,7 +178,7 @@ const AITutor: React.FC = () => {
         </div>
       </header>
 
-      <main className="flex-1 overflow-y-auto no-scrollbar p-4 flex flex-col gap-6" ref={scrollRef}>
+      <main className="flex-1 overflow-y-auto ios-scroll no-scrollbar p-4 flex flex-col gap-6" ref={scrollRef}>
         <div className="flex flex-col items-center justify-center py-4">
           <div className="relative">
             <div className="w-24 h-24 rounded-full bg-primary/20 flex items-center justify-center overflow-hidden border-4 border-white dark:border-gray-800 shadow-lg">
