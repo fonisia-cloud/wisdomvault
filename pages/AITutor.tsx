@@ -4,6 +4,7 @@ import { IMAGES } from '../constants';
 import { useUser, Mistake } from '../contexts/UserContext';
 import { tutorService } from '@/services/tutor';
 import MathMarkdown from '@/components/MathMarkdown';
+import { normalizeMathLikeText } from '@/lib/textSanitizer';
 
 type ChatMessage = { sender: 'ai' | 'user'; text: string; avatar?: string };
 
@@ -51,7 +52,7 @@ const AITutor: React.FC = () => {
         setMessages(
           rows.map((row) => ({
             sender: row.role === 'assistant' ? 'ai' : 'user',
-            text: row.content,
+            text: row.role === 'assistant' ? normalizeMathLikeText(row.content) : row.content,
             avatar: row.role === 'assistant' ? IMAGES.robotTutorSmall : undefined
           }))
         );
@@ -128,7 +129,7 @@ const AITutor: React.FC = () => {
         ...prev,
         {
           sender: 'ai',
-          text: result.reply || '我理解你的意思了。我们再换一种方式试试。',
+          text: normalizeMathLikeText(result.reply || '我理解你的意思了。我们再换一种方式试试。'),
           avatar: IMAGES.robotTutorSmall2
         }
       ]);

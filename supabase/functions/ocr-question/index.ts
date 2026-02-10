@@ -10,11 +10,17 @@ type RequestBody = {
 };
 
 const normalizeOcrText = (raw: string) => {
-  return raw
+  const collapsed = raw.replace(/\\{2,}/g, '\\');
+
+  return collapsed
     .replace(/```(?:markdown|md|text)?/gi, '')
     .replace(/```/g, '')
+    .replace(/\*\*(.*?)\*\*/g, '$1')
     .replace(/\r\n/g, '\n')
     .replace(/\\frac\s*\{([^{}]+)\}\s*\{([^{}]+)\}/g, '$1/$2')
+    .replace(/\\left\s*([\(\[\{\|])/g, '$1')
+    .replace(/\\right\s*([\)\]\}\|])/g, '$1')
+    .replace(/\\left|\\right/g, '')
     .replace(/\t+/g, ' × ')
     .replace(/\\times|\\cdot/g, '×')
     .replace(/\\div/g, '÷')

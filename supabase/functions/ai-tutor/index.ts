@@ -21,6 +21,24 @@ type RequestBody = {
   messages?: InputMessage[];
 };
 
+const normalizeAiText = (raw: string) => {
+  const collapsed = (raw || '').replace(/\\{2,}/g, '\\');
+  return collapsed
+    .replace(/\*\*(.*?)\*\*/g, '$1')
+    .replace(/__(.*?)__/g, '$1')
+    .replace(/\$\$([^$]+)\$\$/g, '$1')
+    .replace(/\$([^$]+)\$/g, '$1')
+    .replace(/\\left\s*([\(\[\{\|])/g, '$1')
+    .replace(/\\right\s*([\)\]\}\|])/g, '$1')
+    .replace(/\\left|\\right/g, '')
+    .replace(/\\frac\s*\{([^{}]+)\}\s*\{([^{}]+)\}/g, '($1)/($2)')
+    .replace(/\\times|\\cdot/g, '×')
+    .replace(/\\div/g, '÷')
+    .replace(/[{}]/g, '')
+    .replace(/[ \t]{2,}/g, ' ')
+    .trim();
+};
+
 Deno.serve(async (req) => {
   if (req.method === 'OPTIONS') {
     return new Response('ok', { headers: corsHeaders });
@@ -76,7 +94,7 @@ Deno.serve(async (req) => {
       '你是一个给中小学生讲题的苏格拉底导师。',
       '请优先用启发式问题引导，不要直接给最终答案。',
       '语言简洁、鼓励式、中文输出。',
-      '数学公式请使用 LaTeX，并用 $...$ 或 $$...$$ 包裹，便于前端正确排版。',
+      '数学表达式尽量使用普通可读形式（如 (3/4) × 20），不要输出 LaTeX 标记（如 $...$, \\frac, \\left, \\right）。',
       '当学生连续两次表示不懂时，给更具体的一步提示。',
       '如果题目信息不充分，先问澄清问题。',
       contextLines.length ? `题目上下文:\n${contextLines.join('\n')}` : ''
@@ -122,7 +140,8 @@ Deno.serve(async (req) => {
       );
     }
 
-    const reply = iflowJson?.choices?.[0]?.message?.content?.trim() || '我们换一个角度想想，你愿意先说说你最不确定的步骤吗？';
+    const rawReply = iflowJson?.choices?.[0]?.message?.content?.trim() || '我们换一个角度想想，你愿意先说说你最不确定的步骤吗？';
+    const reply = normalizeAiText(rawReply);
 
     const latestUserMessage = recentMessages.filter((m) => m.role === 'user').slice(-1)[0];
 

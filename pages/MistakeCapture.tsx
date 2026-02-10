@@ -2,6 +2,7 @@ import React, { useMemo, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { IMAGES } from '../constants';
 import { ocrService } from '@/services/ocr';
+import { normalizeMathLikeText } from '@/lib/textSanitizer';
 
 type CropBox = {
   x: number;
@@ -20,19 +21,7 @@ const MAX_EDITOR_EDGE = IS_IOS ? 1600 : 2200;
 const MAX_OCR_EDGE = IS_IOS ? 1024 : 1400;
 const MAX_OCR_PIXELS = IS_IOS ? 900_000 : 1_500_000;
 
-const normalizeQuestionText = (raw: string) =>
-  (raw || '')
-    .replace(/\\frac\s*\{([^{}]+)\}\s*\{([^{}]+)\}/g, '$1/$2')
-    .replace(/\$\$([^$]+)\$\$/g, '$1')
-    .replace(/\$([^$]+)\$/g, '$1')
-    .replace(/\\\((.*?)\\\)/g, '$1')
-    .replace(/\\\[(.*?)\\\]/g, '$1')
-    .replace(/\\times|\\cdot/g, '×')
-    .replace(/\\div/g, '÷')
-    .replace(/\\leq\b|\\le\b/g, '≤')
-    .replace(/\\geq\b|\\ge\b/g, '≥')
-    .replace(/[{}]/g, '')
-    .trim();
+const normalizeQuestionText = (raw: string) => normalizeMathLikeText(raw);
 
 const MistakeCapture: React.FC = () => {
   const navigate = useNavigate();

@@ -4,6 +4,7 @@ import rehypeKatex from 'rehype-katex';
 import remarkBreaks from 'remark-breaks';
 import remarkGfm from 'remark-gfm';
 import remarkMath from 'remark-math';
+import { normalizeMathLikeText } from '@/lib/textSanitizer';
 
 interface MathMarkdownProps {
   content: string;
@@ -11,10 +12,7 @@ interface MathMarkdownProps {
 }
 
 const normalizeMathBlocks = (text: string) => {
-  return text
-    .replace(/\r\n/g, '\n')
-    .replace(/\*\*(.*?)\*\*/g, '$1')
-    .replace(/__(.*?)__/g, '$1')
+  return normalizeMathLikeText(text)
     .replace(/\\\$/g, '$')
     .replace(/\\times|\\cdot/g, '×')
     .replace(/\\div/g, '÷')
@@ -27,8 +25,7 @@ const normalizeMathBlocks = (text: string) => {
     .replace(/\$\$\s*$/gm, '')
     .replace(/\\\[(.*?)\\\]/gs, '$$$$ $1 $$$$')
     .replace(/\\\((.*?)\\\)/gs, '$$$1$$')
-    .replace(/\\\\([a-zA-Z]+)/g, '\\$1')
-    .replace(/(^|\s)(\\(?:frac|sqrt|sum|int|pi|alpha|beta|gamma|theta|sin|cos|tan|cdot|times|div)[^\n]*)/g, '$1$$$2$$');
+    .replace(/\\\\([a-zA-Z]+)/g, '\\$1');
 };
 
 const stripBrokenMathDelimiters = (text: string) => {
